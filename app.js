@@ -50,6 +50,13 @@ app.use(cors());
 
 // app.get('/atualizacoes',  middlewareEnvioServer, enviarDados)
 
+let now = {
+    'co': ['a','b'],
+    'co2': ['a','b'],
+    'o3': ['a','b'],
+    'no2': ['a','b'],
+    'so2': ['a','b'],
+};
 const leituras = [
     {
       'id': 1234,
@@ -66,15 +73,23 @@ const leituras = [
   ];
 
 app.get('/', (req, res) => {
-    res.send("<h1>Você esté em home<h1>");
+    res.send("<h1>Você está em home<h1>");
 })
-app.get('/dados', (req, res) => res.json(leituras));
+app.get('/dados', (req, res) => res.json(now));
 
 app.post('/dados', (req, res) => {
-   console.log(req.body)
+   console.log(req.body);
+   const leitura = {
+        'co': [req.body.ppm[0], req.body.ugm3[0]],
+        'co2': [req.body.ppm[1], req.body.ugm3[1]],
+        'o3': [req.body.ppm[2], req.body.ugm3[2]],
+        'no2': [req.body.ppm[3], req.body.ugm3[3]],
+        'so2': [req.body.ppm[4], req.body.ugm3[4]],
+   };
+   Object.assign(now, leitura);
    res.send("recebido");
 });
 
 app.listen(process.env.PORT || 3000, () => {
-    console.log('ESPERANDO NA PORTA ${process.env.PORT}');
+    console.log(`ESPERANDO NA PORTA ${process.env.PORT}`);
 });
