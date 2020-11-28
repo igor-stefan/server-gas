@@ -45,16 +45,22 @@ app.post('/dados', (req, res) => {
         'so2': [req.body.ppm[4], req.body.ugm3[4]],
    };
    Object.assign(now, leitura);
-   for(const k in leitura){
-       console.log("K = ", k, ' K[0] = ', leitura[k][0]);
-       db('ppm').insert({
-           k: parseFloat(leitura[k][0]),
-       });
-       console.log("K = ", k, ' K[1] = ', leitura[k][1]);
-       db('ugm3').insert({
-        k: parseFloat(leitura[k][1]),
+    db('ppm').insert({
+        co: parseFloat(leitura.co[0])),
+        co2: parseFloat(leitura.co2[1]),
+        o3: parseFloat(leitura.co[2]),
+        no2: parseFloat(leitura.co[3]),
+        so2: parseFloat(leitura.co[4]),
+        tempo: new Date()
     });
-   }
+    db('ugm3').insert({
+        co: parseFloat(leitura.co[0]),
+        co2: parseFloat(leitura.co2[1]),
+        o3: parseFloat(leitura.o3[2]),
+        no2: parseFloat(leitura.no2[3]),
+        so2: parseFloat(leitura.so2[4]),
+        tempo: new Date()  
+    });
    db('ppm').insert({ tempo: new Date()});
    db('ugm3').insert({ tempo: new Date()});
    res.send("REQUISIÇÃO POST RECEBIDA");
