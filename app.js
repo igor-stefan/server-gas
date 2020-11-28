@@ -65,6 +65,9 @@ const leituras = [
     }
   ];
 
+app.get('/', (req, res) => {
+    res.send("<h1>Você esté em home<h1>");
+})
 app.get('/dados', (req, res) => res.json(leituras));
 
 app.post('/dados', (req, res) => {
@@ -72,6 +75,6 @@ app.post('/dados', (req, res) => {
    res.send("recebido");
 });
 
-app.listen(3000, () => {
-    console.log('ESPERANDO NA PORTA 3000');
+app.listen(process.env.PORT || 3000, () => {
+    console.log('ESPERANDO NA PORTA ${process.env.PORT}');
 });
