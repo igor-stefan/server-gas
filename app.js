@@ -45,7 +45,8 @@ app.post('/dados', (req, res) => {
         'so2': [req.body.ppm[4], req.body.ugm3[4]],
    };
    Object.assign(now, leitura);
-   for(const k in now){
+   for(const k in leitura){
+       console.log("K = ", k)
        db('ppm').insert({
            k: k[0],
        });
@@ -55,7 +56,7 @@ app.post('/dados', (req, res) => {
    }
    db('ppm').insert({ tempo: new Date()});
    db('ugm3').insert({ tempo: new Date()});
-   console.log(db('ppm').count('entrada'));
+   console.log('CONTAGEM = ', db('ppm').count('entrada'));
    res.send("REQUISIÇÃO POST RECEBIDA");
 });
 
