@@ -52,7 +52,7 @@ app.post('/dados', (req, res) => {
         no2: parseFloat(leitura.co[3]),
         so2: parseFloat(leitura.co[4]),
         tempo: new Date()
-    });
+    }).then(console.log);
     db('ugm3').insert({
         co: parseFloat(leitura.co[0]),
         co2: parseFloat(leitura.co2[1]),
@@ -60,9 +60,7 @@ app.post('/dados', (req, res) => {
         no2: parseFloat(leitura.no2[3]),
         so2: parseFloat(leitura.so2[4]),
         tempo: new Date()  
-    });
-   db('ppm').insert({ tempo: new Date()});
-   db('ugm3').insert({ tempo: new Date()});
+    }).then(console.log);
    res.send("REQUISIÇÃO POST RECEBIDA");
 });
 
