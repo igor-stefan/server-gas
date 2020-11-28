@@ -57,10 +57,6 @@ app.post('/dados', (req, res) => {
    }
    db('ppm').insert({ tempo: new Date()});
    db('ugm3').insert({ tempo: new Date()});
-   console.log('CONTAGEM = ');
-   db('ppm').count('entrada').then(data => {
-        console.log(JSON.stringify(data));
-   });
    res.send("REQUISIÇÃO POST RECEBIDA");
 });
 
