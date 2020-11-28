@@ -1,19 +1,18 @@
 const express = require('express');
 const cors = require('cors');
-// const knex = require('knex');
-// const bcrypt = require('bcrypt');
+const knex = require('knex');
 
 const app = express();
 
-// const db = knex({
-//     client: 'pg',
-//     connection: {
-//       host : '127.0.0.1',
-//       user : 'projeto',
-//       password : '123d',
-//       database : 'smartbrain'
-//     }
-//   });
+const db = knex({
+    client: 'pg',
+    connection: {
+      host : '127.0.0.1',
+      user : 'projeto',
+      password : '123d',
+      database : 'monitoramento-gases'
+    }
+});
 
 //MIDLEWARES
 app.use(express.urlencoded({extended: false}));
@@ -46,6 +45,17 @@ app.post('/dados', (req, res) => {
         'so2': [req.body.ppm[4], req.body.ugm3[4]],
    };
    Object.assign(now, leitura);
+   for(const k of now){
+       db('ppm').insert({
+           k: k[0],
+       });
+       db('ugm3').insert({
+        k: k[1],
+    });
+   }
+   db('ppm').insert({ tempo: new Date()});
+   db('ugm3').insert({ tempo: new Date()});
+   console.log(db('ppm').count('n_entrada'));
    res.send("REQUISIÇÃO POST RECEBIDA");
 });
 
