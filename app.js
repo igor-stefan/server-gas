@@ -48,11 +48,11 @@ app.post('/dados', (req, res) => {
    for(const k in leitura){
        console.log("K = ", k, ' K[0] = ', leitura[k][0]);
        db('ppm').insert({
-           k: leitura[k][0],
+           k: parseFloat(leitura[k][0]),
        });
        console.log("K = ", k, ' K[1] = ', leitura[k][1]);
        db('ugm3').insert({
-        k: leitura[k][1],
+        k: parseFloat(leitura[k][1]),
     });
    }
    db('ppm').insert({ tempo: new Date()});
