@@ -13,7 +13,7 @@ const db = knex({
       password : '123d',
       database : 'monitoramento-gases'
     }
-}).catch(err => console.log(err));
+});
 
 //MIDLEWARES
 app.use(express.urlencoded({extended: false}));
