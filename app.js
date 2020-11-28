@@ -46,13 +46,13 @@ app.post('/dados', (req, res) => {
    };
    Object.assign(now, leitura);
    for(const k in leitura){
-       console.log("K = ", k, ' K[0] = ', k[0]);
+       console.log("K = ", k, ' K[0] = ', leitura[k][0]);
        db('ppm').insert({
-           k: k[0],
+           k: leitura[k][0],
        });
-       console.log("K = ", k, ' K[1] = ', k[1]);
+       console.log("K = ", k, ' K[1] = ', leitura[k][1]);
        db('ugm3').insert({
-        k: k[1],
+        k: leitura[k][1],
     });
    }
    db('ppm').insert({ tempo: new Date()});
