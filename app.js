@@ -46,7 +46,7 @@ app.post('/dados', (req, res) => {
    };
    Object.assign(now, leitura);
     db('ppm').insert({
-        co: parseFloat(leitura.co[0])),
+        co: parseFloat(leitura.co[0]),
         co2: parseFloat(leitura.co2[1]),
         o3: parseFloat(leitura.co[2]),
         no2: parseFloat(leitura.co[3]),
