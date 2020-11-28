@@ -6,13 +6,14 @@ const app = express();
 
 const db = knex({
     client: 'pg',
+    version: '7.2',
     connection: {
       host : '127.0.0.1',
       user : 'projeto',
       password : '123d',
       database : 'monitoramento-gases'
     }
-});
+}).catch(err => console.log(err));
 
 //MIDLEWARES
 app.use(express.urlencoded({extended: false}));
