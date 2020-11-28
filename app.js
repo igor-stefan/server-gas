@@ -45,7 +45,7 @@ app.post('/dados', (req, res) => {
         'so2': [req.body.ppm[4], req.body.ugm3[4]],
    };
    Object.assign(now, leitura);
-   for(const k of now){
+   for(const k in now){
        db('ppm').insert({
            k: k[0],
        });
