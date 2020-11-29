@@ -6,11 +6,9 @@ const app = express();
 
 const db = knex({
     client: 'pg',
-    connection: {
-      host : '127.0.0.1',
-      user : 'projeto',
-      password : '123d',
-      database : 'monitoramento-gases'
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false
     }
 });
 
@@ -46,20 +44,20 @@ app.post('/dados', (req, res) => {
    };
    Object.assign(now, leitura);
     db('ppm').insert({
-        co: parseFloat(leitura.co[0]),
-        co2: parseFloat(leitura.co2[1]),
-        o3: parseFloat(leitura.co[2]),
-        no2: parseFloat(leitura.co[3]),
-        so2: parseFloat(leitura.co[4]),
-        tempo: new Date()
+        co: leitura.co[0],
+        co2: leitura.co2[0],
+        o3: leitura.o3[0],
+        no2: leitura.no2[0],
+        so2: leitura.so2[0],
+        data: new Date()
     }).then(console.log);
     db('ugm3').insert({
-        co: parseFloat(leitura.co[0]),
+        co: parseFloat(leitura.co[1]),
         co2: parseFloat(leitura.co2[1]),
-        o3: parseFloat(leitura.o3[2]),
-        no2: parseFloat(leitura.no2[3]),
-        so2: parseFloat(leitura.so2[4]),
-        tempo: new Date()  
+        o3: parseFloat(leitura.o3[1]),
+        no2: parseFloat(leitura.no2[1]),
+        so2: parseFloat(leitura.so2[1]),
+        data: new Date()  
     }).then(console.log);
    res.send("REQUISIÇÃO POST RECEBIDA");
 });
