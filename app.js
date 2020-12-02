@@ -4,6 +4,7 @@ const knex = require('knex');
 
 const app = express();
 
+
 const db = knex({
     client: 'pg',
     connection: {
@@ -14,6 +15,18 @@ const db = knex({
     }
 });
 
+
+/*
+const db = knex({
+    client: 'pg',
+    connection: {
+      host : '127.0.0.1',
+      user : 'projeto',
+      password : '123d',
+      database : 'monitoramento-gases'
+    }
+  });
+*/
 //MIDLEWARES
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
@@ -35,6 +48,7 @@ app.get('/', (req, res) => {
 
 app.get('/dados', (req, res) => res.json(now));
 
+let flag = false;
 app.post('/dados', (req, res) => {
    console.log(req.body);
    const leitura = {
@@ -52,7 +66,9 @@ app.post('/dados', (req, res) => {
         no2: leitura.no2[0],
         so2: leitura.so2[0],
         data: new Date()
-    }).then(console.log);
+    }).then(x => {
+        console.log(x.command, 'REALIZADO NA TABELA ppm');
+    });
     db('ugm3').insert({
         co: parseFloat(leitura.co[1]),
         co2: parseFloat(leitura.co2[1]),
@@ -60,10 +76,60 @@ app.post('/dados', (req, res) => {
         no2: parseFloat(leitura.no2[1]),
         so2: parseFloat(leitura.so2[1]),
         data: new Date()  
-    }).then(console.log);
+    }).then(x => {
+        console.log(x.command, 'REALIZADO NA TABELA ugm3');
+    });
+    flag = true;
    res.send("REQUISIÇÃO POST RECEBIDA");
 });
 
+let ans = {
+    'co' : ['x', 'y', 'z', 'j', 'k', 'l'],
+    'co2' : ['x', 'y', 'z','j', 'k', 'l'],
+    'o3' : ['x', 'y', 'z','j', 'k', 'l'],
+    'no2' : ['x', 'y', 'z','j', 'k', 'l'],
+    'so2' : ['x', 'y', 'z', 'j', 'k', 'l']
+}
+
+app.get('/minmaxmed', async function(req, res){
+    for(k in ans){
+        const minimo_ppm = await db('ppm').min(`${k} as x`).first();
+        const maximo_ppm = await db('ppm').max(`${k} as x`).first();
+        const media_ppm = await db('ppm').avg(`${k} as x`).first();
+        const minimo_ugm3 = await db('ugm3').min(`${k} as x`).first();
+        const maximo_ugm3 = await db('ugm3').max(`${k} as x`).first();
+        const media_ugm3 = await db('ugm3').avg(`${k} as x`).first();  
+        ans[k][0] = minimo_ppm.x; 
+        ans[k][1] = maximo_ppm.x;
+        ans[k][2] = media_ppm.x;
+        ans[k][3] = minimo_ugm3.x; 
+        ans[k][4] = maximo_ugm3.x;
+        ans[k][5] = media_ugm3.x;
+    }
+    res.setHeader("Content-Type","text/event-stream"); 
+    minMaxMed(res);
+    //os 3 primeiros sao valores em ppm do gas e os 3 ultimos sao os valores em ugm3
+});
+
+function minMaxMed(res){
+    res.write("retry: " + 10000 + "\ndata: " + JSON.stringify(ans) + "\n\n");
+    setTimeout(() => minMaxMed(res), 25000); //a cada 25 seg atualiza min max e med
+}
+
+app.get('/startsend', (req, res) => {
+    res.setHeader("Content-Type","text/event-stream");
+    enviarDados(res);
+});
+
+function enviarDados(res){
+    console.log("flag = ", flag);
+    if(flag == true){
+        res.write("retry: " + 10000 + "\ndata: " + JSON.stringify(now) + "\n\n");
+        flag = false;
+    }
+    setTimeout(() => enviarDados(res), 5000); //a cada 5 seg verifica se há nova informação e envia ao frontend
+}
+
 app.listen(process.env.PORT || 3000, () => {
-    console.log('ESPERANDO NA PORTA `${process.env.PORT}`');
+    console.log('ESPERANDO NA PORTA ${process.env.PORT || 3000}');
 });
