@@ -7,25 +7,25 @@ const eventEmitter = new emitter();
 const app = express();
 
 
-// const db = knex({
-//     client: 'pg',
-//     connection: {
-//         connectionString: process.env.DATABASE_URL,
-//         ssl: {
-//           rejectUnauthorized: false
-//         }
-//     }
-// });
-
 const db = knex({
     client: 'pg',
     connection: {
-      host : '127.0.0.1',
-      user : 'projeto',
-      password : '123d',
-      database : 'monitoramento-gases'
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+          rejectUnauthorized: false
+        }
     }
-  });
+});
+
+// const db = knex({
+//     client: 'pg',
+//     connection: {
+//       host : '127.0.0.1',
+//       user : 'projeto',
+//       password : '123d',
+//       database : 'monitoramento-gases'
+//     }
+//   });
 
 
 //MIDLEWARES
