@@ -1,22 +1,22 @@
 const express = require('express');
 const cors = require('cors');
 const knex = require('knex');
+const emitter = require('events').EventEmitter;
+const eventEmitter = new emitter();
 
 const app = express();
 
 
-const db = knex({
-    client: 'pg',
-    connection: {
-        connectionString: process.env.DATABASE_URL,
-        ssl: {
-          rejectUnauthorized: false
-        }
-    }
-});
+// const db = knex({
+//     client: 'pg',
+//     connection: {
+//         connectionString: process.env.DATABASE_URL,
+//         ssl: {
+//           rejectUnauthorized: false
+//         }
+//     }
+// });
 
-
-/*
 const db = knex({
     client: 'pg',
     connection: {
@@ -26,13 +26,14 @@ const db = knex({
       database : 'monitoramento-gases'
     }
   });
-*/
+
+
 //MIDLEWARES
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(cors());
 
-//ROUTES
+//ROTASS
 
 let now = {
     'co': ['a','b'],
@@ -40,6 +41,7 @@ let now = {
     'o3': ['a','b'],
     'no2': ['a','b'],
     'so2': ['a','b'],
+    'id': 0,
 };
 
 app.get('/', (req, res) => {
@@ -48,7 +50,6 @@ app.get('/', (req, res) => {
 
 app.get('/dados', (req, res) => res.json(now));
 
-let flag = false;
 app.post('/dados', (req, res) => {
    console.log(req.body);
    const leitura = {
@@ -59,6 +60,7 @@ app.post('/dados', (req, res) => {
         'so2': [req.body.ppm[4], req.body.ugm3[4]],
    };
    Object.assign(now, leitura);
+
     db('ppm').insert({
         co: leitura.co[0],
         co2: leitura.co2[0],
@@ -79,7 +81,7 @@ app.post('/dados', (req, res) => {
     }).then(x => {
         console.log(x.command, 'REALIZADO NA TABELA ugm3');
     });
-    flag = true;
+   eventEmitter.emit('novo_post', 'novo_post');
    res.send("REQUISIÇÃO POST RECEBIDA");
 });
 
@@ -106,29 +108,33 @@ app.get('/minmaxmed', async function(req, res){
         ans[k][4] = maximo_ugm3.x;
         ans[k][5] = media_ugm3.x;
     }
-    res.setHeader("Content-Type","text/event-stream"); 
-    minMaxMed(res);
+    res.setHeader("Content-Type","text/event-stream");
+    console.log("CONEXAO INICIADA SOURCE 2"); 
+    function listener_min_max_med(event){
+        console.log('Nova informação postada! --> Evento:', event, 'SOURCE 2');
+        res.write("data: " + JSON.stringify(ans) + "\n\n");
+    };
+    eventEmitter.addListener('novo_post', listener_min_max_med);
+    req.on('close', () => {
+        eventEmitter.removeListener('novo_post', listener_min_max_med);
+        console.log("CONEXAO FINALIZADA SOURCE 2")
+    })
     //os 3 primeiros sao valores em ppm do gas e os 3 ultimos sao os valores em ugm3
 });
 
-function minMaxMed(res){
-    res.write("retry: " + 10000 + "\ndata: " + JSON.stringify(ans) + "\n\n");
-    setTimeout(() => minMaxMed(res), 25000); //a cada 25 seg atualiza min max e med
-}
-
 app.get('/startsend', (req, res) => {
     res.setHeader("Content-Type","text/event-stream");
-    enviarDados(res);
+    console.log("CONEXAO INICIADA SOURCE 1");
+    function listener_post_dados(event) {
+        console.log('Nova informação postada! --> Evento:', event, 'SOURCE 1');
+        res.write("data: " + JSON.stringify(now) + "\n\n");
+    };
+    eventEmitter.addListener('novo_post', listener_post_dados);
+    req.on('close', () => {
+        eventEmitter.removeListener('novo_post', listener_post_dados);
+        console.log("CONEXAO FINALIZADA SOURCE 1")
+    })
 });
-
-function enviarDados(res){
-    console.log("flag = ", flag);
-    if(flag == true){
-        res.write("retry: " + 10000 + "\ndata: " + JSON.stringify(now) + "\n\n");
-        flag = false;
-    }
-    setTimeout(() => enviarDados(res), 5000); //a cada 5 seg verifica se há nova informação e envia ao frontend
-}
 
 app.listen(process.env.PORT || 3000, () => {
     console.log('ESPERANDO NA PORTA ${process.env.PORT || 3000}');
