@@ -108,8 +108,10 @@ app.get('/minmaxmed', async function(req, res){
         ans[k][4] = maximo_ugm3.x;
         ans[k][5] = media_ugm3.x;
     }
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Headers", "*");
+    res.setHeader("Access-Control-Allow-Credentials", true);
     res.setHeader("Content-Type","text/event-stream");
-    res.setHeader('Access-Control-Allow-Origin', '*');
     console.log("CONEXAO INICIADA SOURCE 2"); 
     function listener_min_max_med(event){
         console.log('Nova informação postada! --> Evento:', event, 'SOURCE 2');
@@ -124,8 +126,10 @@ app.get('/minmaxmed', async function(req, res){
 });
 
 app.get('/startsend', (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Headers", "*");
+    res.setHeader("Access-Control-Allow-Credentials", true);
     res.setHeader("Content-Type","text/event-stream");
-    res.setHeader('Access-Control-Allow-Origin', '*');
     console.log("CONEXAO INICIADA SOURCE 1");
     function listener_post_dados(event) {
         console.log('Nova informação postada! --> Evento:', event, 'SOURCE 1');
