@@ -31,7 +31,7 @@ const db = knex({
 //MIDLEWARES
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
-// app.use(cors());
+app.use(cors());
 
 //ROTASS
 
@@ -60,7 +60,6 @@ app.post('/dados', (req, res) => {
         'so2': [req.body.ppm[4], req.body.ugm3[4]],
    };
    Object.assign(now, leitura);
-
     db('ppm').insert({
         co: leitura.co[0],
         co2: leitura.co2[0],
@@ -108,9 +107,9 @@ app.get('/minmaxmed', async function(req, res){
         ans[k][4] = maximo_ugm3.x;
         ans[k][5] = media_ugm3.x;
     }
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Headers", "*");
-    res.setHeader("Access-Control-Allow-Credentials", true);
+    // res.setHeader("Access-Control-Allow-Origin", "*");
+    // res.setHeader("Access-Control-Allow-Headers", "*");
+    // res.setHeader("Access-Control-Allow-Credentials", true);
     res.setHeader("Content-Type","text/event-stream");
     console.log("CONEXAO INICIADA SOURCE 2"); 
     function listener_min_max_med(event){
@@ -126,9 +125,9 @@ app.get('/minmaxmed', async function(req, res){
 });
 
 app.get('/startsend', (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Headers", "*");
-    res.setHeader("Access-Control-Allow-Credentials", true);
+    // res.setHeader("Access-Control-Allow-Origin", "*");
+    // res.setHeader("Access-Control-Allow-Headers", "*");
+    // res.setHeader("Access-Control-Allow-Credentials", true);
     res.setHeader("Content-Type","text/event-stream");
     console.log("CONEXAO INICIADA SOURCE 1");
     function listener_post_dados(event) {
