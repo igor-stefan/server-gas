@@ -98,7 +98,7 @@ let ans = {
 }
 
 app.get('/minmaxmed', async function(req, res){
-    for(k in ans){
+     for(k in ans){
         const minimo_ppm = await db('ppm').min(`${k} as x`).first();
         const maximo_ppm = await db('ppm').max(`${k} as x`).first();
         const media_ppm = await db('ppm').avg(`${k} as x`).first();
@@ -113,18 +113,18 @@ app.get('/minmaxmed', async function(req, res){
         ans[k][5] = media_ugm3.x;
     }
     for(let prop in ans){
-        if(leitura[prop][0] === null)
-            leitura[prop][0] = 0;
-        if(leitura[prop][1] === null)
-            leitura[prop][1] = 0;
-            if(leitura[prop][2] === null)
-            leitura[prop][2] = 0;
-        if(leitura[prop][3] === null)
-            leitura[prop][3] = 0;
-            if(leitura[prop][4] === null)
-            leitura[prop][4] = 0;
-        if(leitura[prop][5] === null)
-            leitura[prop][5] = 0;
+        if(ans[prop][0] === null)
+            ans[prop][0] = 0;
+        if(ans[prop][1] === null)
+            ans[prop][1] = 0;
+            if(ans[prop][2] === null)
+            ans[prop][2] = 0;
+        if(ans[prop][3] === null)
+            ans[prop][3] = 0;
+            if(ans[prop][4] === null)
+            ans[prop][4] = 0;
+        if(ans[prop][5] === null)
+            ans[prop][5] = 0;
     }
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Headers", "*");
