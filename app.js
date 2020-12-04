@@ -99,6 +99,7 @@ let ans = {
 
 app.get('/minmaxmed', async function(req, res){
      for(k in ans){
+         console.log("estou no for requisitando");
         const minimo_ppm = await db('ppm').min(`${k} as x`).first();
         const maximo_ppm = await db('ppm').max(`${k} as x`).first();
         const media_ppm = await db('ppm').avg(`${k} as x`).first();
@@ -113,6 +114,7 @@ app.get('/minmaxmed', async function(req, res){
         ans[k][5] = media_ugm3.x;
     }
     for(let prop in ans){
+        console.log(ans[prop], "estou no segundo for corrigindo");
         if(ans[prop][0] === null)
             ans[prop][0] = 0;
         if(ans[prop][1] === null)
