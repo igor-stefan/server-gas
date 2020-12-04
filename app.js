@@ -115,18 +115,11 @@ app.get('/minmaxmed', async function(req, res){
     }
     for(let prop in ans){
         console.log(ans[prop], "estou no segundo for corrigindo");
-        if(ans[prop][0] === null)
-            ans[prop][0] = 0;
-        if(ans[prop][1] === null)
-            ans[prop][1] = 0;
-            if(ans[prop][2] === null)
-            ans[prop][2] = 0;
-        if(ans[prop][3] === null)
-            ans[prop][3] = 0;
-            if(ans[prop][4] === null)
-            ans[prop][4] = 0;
-        if(ans[prop][5] === null)
-            ans[prop][5] = 0;
+        for(let x of ans[prop]){
+            console.log("x = ", x);
+            if(x === null || isNaN(x))
+                x = 0;
+        }
     }
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Headers", "*");
