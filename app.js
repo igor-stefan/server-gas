@@ -36,12 +36,11 @@ app.use(cors());
 //ROTASS
 
 let now = {
-    'co': ['a','b'],
-    'co2': ['a','b'],
-    'o3': ['a','b'],
-    'no2': ['a','b'],
-    'so2': ['a','b'],
-    'id': 0,
+    'co': [0, 0],
+    'co2': [0, 0],
+    'o3': [0, 0],
+    'no2': [0, 0],
+    'so2': [0, 0]
 };
 
 app.get('/', (req, res) => {
@@ -59,6 +58,12 @@ app.post('/dados', (req, res) => {
         'no2': [req.body.ppm[3], req.body.ugm3[3]],
         'so2': [req.body.ppm[4], req.body.ugm3[4]],
    };
+   for(let prop in leitura){
+       if(leitura[prop][0] === null)
+            leitura[prop][0] = 0;
+        if(leitura[prop][1] === null)
+            leitura[prop][1] = 0;
+   }
    Object.assign(now, leitura);
     db('ppm').insert({
         co: leitura.co[0],
