@@ -112,6 +112,20 @@ app.get('/minmaxmed', async function(req, res){
         ans[k][4] = maximo_ugm3.x;
         ans[k][5] = media_ugm3.x;
     }
+    for(let prop in ans){
+        if(leitura[prop][0] === null)
+            leitura[prop][0] = 0;
+        if(leitura[prop][1] === null)
+            leitura[prop][1] = 0;
+            if(leitura[prop][2] === null)
+            leitura[prop][2] = 0;
+        if(leitura[prop][3] === null)
+            leitura[prop][3] = 0;
+            if(leitura[prop][4] === null)
+            leitura[prop][4] = 0;
+        if(leitura[prop][5] === null)
+            leitura[prop][5] = 0;
+    }
     // res.setHeader("Access-Control-Allow-Origin", "*");
     // res.setHeader("Access-Control-Allow-Headers", "*");
     // res.setHeader("Access-Control-Allow-Credentials", true);
