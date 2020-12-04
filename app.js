@@ -115,11 +115,11 @@ app.get('/minmaxmed', async function(req, res){
     }
     for(let prop in ans){
         console.log(ans[prop], "estou no segundo for corrigindo");
-        for(let x of ans[prop]){
-            console.log("x = ", x);
+        ans[prop] = ans[prop].map(x => {
             if(x === null || isNaN(x))
                 x = 0;
-        }
+            return x;
+        });
     }
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Headers", "*");
