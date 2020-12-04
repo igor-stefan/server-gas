@@ -59,9 +59,9 @@ app.post('/dados', (req, res) => {
         'so2': [req.body.ppm[4], req.body.ugm3[4]],
    };
    for(let prop in leitura){
-       if(leitura[prop][0] === null)
+       if(leitura[prop][0] === null || isNaN(leitura[prop][0]))
             leitura[prop][0] = 0;
-        if(leitura[prop][1] === null)
+        if(leitura[prop][1] === null || isNaN(leitura[prop][1]))
             leitura[prop][1] = 0;
    }
    Object.assign(now, leitura);
@@ -99,7 +99,7 @@ let ans = {
 
 app.get('/minmaxmed', async function(req, res){
      for(k in ans){
-         console.log("estou no for requisitando");
+        //  console.log("estou no for requisitando");
         const minimo_ppm = await db('ppm').min(`${k} as x`).first();
         const maximo_ppm = await db('ppm').max(`${k} as x`).first();
         const media_ppm = await db('ppm').avg(`${k} as x`).first();
@@ -114,7 +114,7 @@ app.get('/minmaxmed', async function(req, res){
         ans[k][5] = media_ugm3.x;
     }
     for(let prop in ans){
-        console.log(ans[prop], "estou no segundo for corrigindo");
+        // console.log(ans[prop], "estou no segundo for corrigindo");
         ans[prop] = ans[prop].map(x => {
             if(x === null || isNaN(x))
                 x = 0;
