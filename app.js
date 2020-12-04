@@ -126,8 +126,8 @@ app.get('/minmaxmed', async function(req, res){
         if(leitura[prop][5] === null)
             leitura[prop][5] = 0;
     }
-    // res.setHeader("Access-Control-Allow-Origin", "*");
-    // res.setHeader("Access-Control-Allow-Headers", "*");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Headers", "*");
     // res.setHeader("Access-Control-Allow-Credentials", true);
     res.setHeader("Content-Type","text/event-stream");
     console.log("CONEXAO INICIADA SOURCE 2"); 
@@ -144,8 +144,8 @@ app.get('/minmaxmed', async function(req, res){
 });
 
 app.get('/startsend', (req, res) => {
-    // res.setHeader("Access-Control-Allow-Origin", "*");
-    // res.setHeader("Access-Control-Allow-Headers", "*");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Headers", "*");
     // res.setHeader("Access-Control-Allow-Credentials", true);
     res.setHeader("Content-Type","text/event-stream");
     console.log("CONEXAO INICIADA SOURCE 1");
